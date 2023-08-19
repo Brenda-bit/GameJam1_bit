@@ -15,13 +15,27 @@ public class LightManager : MonoBehaviour
     {
         sprite = GetComponent<SpriteRenderer>();
         Color c = sprite.material.color;
-        c.a = 0f;
+        c.a = 0f;   
         sprite.material.color = c;
-        //StartCoroutine(FadeIn());
+        StartCoroutine(FadeIn());
     }
     void Update()
     {
         
+    }
+
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log("Triggou");
+
+        if (collision.gameObject.CompareTag("Oil"))
+        {
+            Debug.Log("Triggou OIL");
+            sprite = GetComponent<SpriteRenderer>();
+            Color c = sprite.material.color;
+            c.a = 0f;
+            sprite.material.color = c;
+        }
     }
     IEnumerator FadeIn()
     {

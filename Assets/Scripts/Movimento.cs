@@ -9,50 +9,51 @@ public class Movimento : MonoBehaviour
     [SerializeField] float pulo = 3f;
     public bool isGrounded;
     [SerializeField] public float jumpGracePeriod;
-
+    private Animator anim;
+    private bool isFacingRight = true;
+    private Rigidbody2D rb;
+    public bool isJumping = false;
+    private void Start()
+    {
+        anim = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
+    }
     void Update()
     {
-        ManejoMovimento();
-        Pulo();
-    }
 
-    void ManejoMovimento()
-    {
-        transform.rotation = Quaternion.identity;
-        float inputHorizontal = Input.GetAxis("Horizontal");
+        float horizontalInput = Input.GetAxis("Horizontal");
+        Vector2 movement = new Vector2(horizontalInput * 5, rb.velocity.y);
+        rb.velocity = movement;
 
-        Vector2 movement = Time.deltaTime * velocidade * new Vector2(inputHorizontal, 0);
-        myRigidBody.position += movement;
-    }
-    void Pulo()
-    {
-        if (isGrounded && Input.GetKeyDown(KeyCode.Space))
+        // Atualizar parâmetro "Speed" no Animator
+        anim.SetFloat("Speed", Mathf.Abs(horizontalInput));
+
+        if (Input.GetButtonDown("Jump"))
         {
-            myRigidBody.velocity = 2 * pulo * Vector2.up;
-            isGrounded = false;
+            rb.velocity = new Vector2(rb.velocity.x, 3);
+            // Ativar trigger "Jump" no Animator
+            anim.SetBool("Jumping", true);
+            StartCoroutine(Wait());
+            anim.SetBool("Jumping", false);
+        }
+        if (horizontalInput > 0 && !isFacingRight)
+        {
+            Flip();
+        }
+        if (horizontalInput < 0 && isFacingRight)
+        {
+            Flip();
         }
     }
-
-    void OnCollisionEnter2D(Collision2D collision)
+    public IEnumerator Wait()
     {
-
-        Vector2 normal = collision.contacts[0].normal;
-
-        if (normal == Vector2.up && collision.gameObject.CompareTag("Platform"))
-        {
-            Debug.Log("Colisão");
-            isGrounded = true;
-        }
+        yield return new WaitForSeconds(5);
     }
-
-    private void OnCollisionExit2D(Collision2D collision)
+    private void Flip()
     {
-        Debug.Log("Saiu do chão");
-        Invoke("ResetGrounded", jumpGracePeriod);
-    }
-    void ResetGrounded()
-    {
-        isGrounded = false;
-        Debug.Log("Grace acabou");
+        isFacingRight = !isFacingRight;
+        Vector3 scale = transform.localScale;
+        scale.x *= -1; // Flipping the sprite by negating the X scale
+        transform.localScale = scale;
     }
 }

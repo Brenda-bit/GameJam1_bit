@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/Falha.unity
+    guid: d1225dae986c6424082473aeef3cb2af
+  - enabled: 1
+    path: "Assets/Scenes/Vit\xF3ria.unity"
+    guid: 5b2e5d4d2357595489bb07bdf6df1057
   m_configObjects: {}

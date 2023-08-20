@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EnemyFollow : MonoBehaviour
 {
     public float speed;
     private Rigidbody2D rb;
     public GameObject Player;
+    public GameObject lightValue;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,14 +30,15 @@ public class EnemyFollow : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D otherCollider)
     {
-        if (otherCollider.CompareTag("CircleLun") || otherCollider.CompareTag("Player"))
+        if (otherCollider.CompareTag("CircleLun") && lightValue.active == true || otherCollider.CompareTag("Player"))
         {
             speed = 0f;
+            SceneManager.LoadScene("Falha");
         }
     }
     private void OnTriggerExit2D(Collider2D otherCollider)
     {
-        if (otherCollider.CompareTag("CircleLun") || otherCollider.CompareTag("Player"))
+        if (otherCollider.CompareTag("CircleLun") && lightValue.active == false || otherCollider.CompareTag("Player"))
         {
             speed = 5f;
         }
